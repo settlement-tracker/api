@@ -12,11 +12,12 @@ class User {
   static create(user) {
     return knex('users').insert(user)
       .returning('id')
-    then(ids => ids[0]);
+
   }
 
   static findOne(username) {
-    return knex('users').where({ username }).first();
+    const user = knex('users').where({ username }).first();
+    return user;
   }
 
   static findById(id) {
