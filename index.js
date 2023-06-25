@@ -7,7 +7,10 @@ const expressLayouts = require('express-ejs-layouts');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
+
 const userRoutes = require('./routes/userRoutes');
+const loginRoutes = require('./routes/loginRoutes');
+const registerRoutes = require('./routes/registerRoutes');
 
 const User = require('./models/user');
 
@@ -34,8 +37,6 @@ app.use(session({
     // maxAge: 2000
   }
 }));
-
-
 //setup passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -77,81 +78,20 @@ passport.deserializeUser((id, done) => {
 });
 
 
-//Routes
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
+// //Routes
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// });
 
 
 //views
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
+
 //login register routes 
 //views
-app.get('/login', (req, res) => res.render('public/login'));
-app.get('/register', (req, res) => res.render('public/register'));
-
-
-
-//api routes
-app.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // Authentication failed
-      return res.redirect('/login');
-    }
-    req.logIn(user, err => {
-      if (err) {
-        return next(err);
-      }
-      // Authentication successful
-      return res.redirect('/users/' + user.username);
-    });
-  })(req, res, next);
-});
-
-app.post('/register', async (req, res) => {
-  try {
-    console.log(req.body);
-    const { username, password } = req.body;
-
-    // Hash the password
-    const hashedPassword = bcrypt.hashSync(password, 8);
-
-    // Create a new user
-    const newUser = new User({
-      username: username,
-      password: hashedPassword,
-      is_active: true,
-      is_admin: true
-    });
-
-    // Save the user to the database
-    const [{ id }] = await User.create(newUser)
-
-
-
-
-    newUser.id = id;
-    // Log the user in
-    req.logIn(newUser, err => {
-      if (err) {
-        return next(err);
-      }
-
-      return res.redirect('/users/' + newUser.username);
-    });
-  }
-  catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-});
-
-
+app.use('/login', loginRoutes);
+app.use('/register', registerRoutes);
 
 
 app.use('/users', userRoutes);
