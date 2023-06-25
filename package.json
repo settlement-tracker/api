@@ -1,0 +1,37 @@
+{
+  "name": "settlement-tracker-api",
+  "version": "1.0.0",
+  "description": "an api to organize and control the databse for the mobile settlement tracker app it will be administrated by admin sveltkit app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/settlement-tracker/api.git"
+  },
+  "keywords": [
+    "settlement",
+    "api",
+    "FWW"
+  ],
+  "author": "trevorius45@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/settlement-tracker/api/issues"
+  },
+  "homepage": "https://github.com/settlement-tracker/api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
