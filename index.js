@@ -7,6 +7,7 @@ const expressLayouts = require('express-ejs-layouts');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
+const userRoutes = require('./routes/userRoutes');
 
 const User = require('./models/user');
 
@@ -29,8 +30,8 @@ app.use(session({
   saveUninitialized: true,
   // rolling: false,
   cookie: {
-    // maxAge: 48 * 60 * 60 * 1000 // 48 hours
-    maxAge: 2000
+    maxAge: 48 * 60 * 60 * 1000 // 48 hours
+    // maxAge: 2000
   }
 }));
 
@@ -89,16 +90,7 @@ app.use(expressLayouts);
 //views
 app.get('/login', (req, res) => res.render('public/login'));
 app.get('/register', (req, res) => res.render('public/register'));
-app.get('/users/:username', async (req, res) => {
-  const username = req.params.username;
-  const user = await User.findOne(username);
 
-  if (user) {
-    res.render('private/user', { user: user });
-  } else {
-    res.status(404).send('User not found');
-  }
-});
 
 
 //api routes
@@ -161,3 +153,5 @@ app.post('/register', async (req, res) => {
 
 
 
+
+app.use('/users', userRoutes);
