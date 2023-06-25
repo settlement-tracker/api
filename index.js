@@ -42,7 +42,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy((username, password, done) => {
   // Match user
   // This should match the user from your database, this is just a placeholder
-  User.findOne({ username: username })
+  User.findOne(username)
     .then(user => {
       if (!user) {
         return done(null, false, { message: 'That username is not registered' });
@@ -103,10 +103,21 @@ app.get('/users/:username', async (req, res) => {
 
 //api routes
 app.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash: true
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      // Authentication failed
+      return res.redirect('/login');
+    }
+    req.logIn(user, err => {
+      if (err) {
+        return next(err);
+      }
+      // Authentication successful
+      return res.redirect('/users/' + user.username);
+    });
   })(req, res, next);
 });
 
