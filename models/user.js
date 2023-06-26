@@ -23,6 +23,10 @@ class User {
   static findById(id) {
     return knex('users').where({ id }).first();
   }
+
+  static findAll() {
+    return knex('users');
+  }
 }
 
 module.exports = User;
