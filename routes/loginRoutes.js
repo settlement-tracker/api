@@ -16,17 +16,20 @@ router.post('/', (req, res, next) => {
     }
     if (!user) {
       // Authentication failed
-      return res.redirect('/login');
+      // return res.redirect('/login');
+      return res.status(403).send('Login failed');
     }
     req.logIn(user, err => {
       if (err) {
         return next(err);
       }
       // Authentication successful
-      return res.redirect('/users/' + user.username);
+      // return res.redirect('/users/' + user.username);
+      return res.status(200).send('Login successful');
     });
   })(req, res, next)
 }
 );
 
 module.exports = router;
+
